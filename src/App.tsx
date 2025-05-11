@@ -3,12 +3,17 @@ import "./App.css";
 
 export default function App() {
   const webApp = window.Telegram.WebApp;
+  webApp.requestFullscreen();
 
   const showQrScanPopup = useCallback(() => {
     webApp.showScanQrPopup({ text: "Scan qr code" }, (data) => {
-      webApp.sendData(data);
-      webApp.closeScanQrPopup();
-      webApp.close();
+      webApp.showConfirm("Отправить этот qr код?", (confirmed) => {
+        if (confirmed) {
+          webApp.sendData(data);
+          webApp.closeScanQrPopup();
+          webApp.close();
+        }
+      });
     });
   }, [webApp]);
 
